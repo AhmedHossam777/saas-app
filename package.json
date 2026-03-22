@@ -1,0 +1,15 @@
+{
+  "name": "saas-app",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "scripts": {
+    "auth": "yarn workspace auth-service start:dev",
+    "tenant": "yarn workspace tenant-service start:dev",
+    "chat": "yarn workspace chat-service start:dev",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  }
+}

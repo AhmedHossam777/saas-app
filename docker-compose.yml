@@ -1,0 +1,83 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: saas-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: saas
+      POSTGRES_PASSWORD: saas_secret
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: saas-rabbitmq
+    restart: unless-stopped
+    ports:
+      - '5672:5672'    # AMQP
+      - '15672:15672'  # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: saas
+      RABBITMQ_DEFAULT_PASS: saas_secret
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: apps/auth-service/Dockerfile
+    container_name: saas-auth
+    restart: unless-stopped
+    ports:
+      - '3001:3001'
+    env_file:
+      - apps/auth-service/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  tenant-service:
+    build:
+      context: .
+      dockerfile: apps/tenant-service/Dockerfile
+    container_name: saas-tenant
+    restart: unless-stopped
+    ports:
+      - '3002:3002'
+    env_file:
+      - apps/tenant-service/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  chat-service:
+    build:
+      context: .
+      dockerfile: apps/chat-service/Dockerfile
+    container_name: saas-chat
+    restart: unless-stopped
+    ports:
+      - '3003:3003'
+    env_file:
+      - apps/chat-service/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
