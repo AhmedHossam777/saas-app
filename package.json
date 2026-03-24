@@ -11,5 +11,6 @@
     "chat": "yarn workspace chat-service start:dev",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down"
-  }
+  },
+  "devDependencies": {}
 }

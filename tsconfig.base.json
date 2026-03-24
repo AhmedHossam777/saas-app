@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "verbatimModuleSyntax": false,
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -14,15 +15,9 @@
     "skipLibCheck": true,
     "strictNullChecks": true,
     "paths": {
-      "@libs/prisma": [
-        "libs/prisma/src/index.ts"
-      ],
-      "@libs/rabbitmq": [
-        "libs/rabbitmq/src/index.ts"
-      ],
-      "@libs/common": [
-        "libs/common/src/index.ts"
-      ]
+      "@libs/prisma": ["libs/prisma/src/index.ts"],
+      "@libs/rabbitmq": ["libs/rabbitmq/src/index.ts"],
+      "@libs/common": ["libs/common/src/index.ts"]
     }
   }
 }
