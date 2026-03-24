@@ -1,5 +1,10 @@
 {
-    "name": "@libs/rabbitmq",
-    "version": "0.0.1",
-    "main": "src/index.ts"
+  "name": "@libs/rabbitmq",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@nestjs/microservices": "^11.0.0",
+    "amqplib": "^0.10.5"
+  }
 }

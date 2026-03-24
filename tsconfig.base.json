@@ -1,23 +1,30 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "verbatimModuleSyntax": false,
+    "target": "ES2021",
+    "lib": ["ES2021"],
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": ".",
-    "incremental": true,
-    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "strict": true,
     "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "incremental": true,
+    "baseUrl": ".",
     "paths": {
       "@libs/prisma": ["libs/prisma/src/index.ts"],
+      "@libs/prisma/*": ["libs/prisma/src/*"],
       "@libs/rabbitmq": ["libs/rabbitmq/src/index.ts"],
-      "@libs/common": ["libs/common/src/index.ts"]
+      "@libs/rabbitmq/*": ["libs/rabbitmq/src/*"],
+      "@libs/common": ["libs/common/src/index.ts"],
+      "@libs/common/*": ["libs/common/src/*"]
     }
   }
 }
