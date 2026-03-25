@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto } from './dto';
-import { RefreshDto } from './dto/refresh.dto';
+import { LoginDto, RegisterDto, RefreshDto } from './dto';
 
 @Controller()
 export class AuthController {
@@ -25,13 +24,13 @@ export class AuthController {
     this.logger.log(
       `Token refresh attempt with token: ${refreshDto.refreshToken}`,
     );
-    return this.appService.refresh(refreshDto.refreshToken);
+    return this.appService.refresh(refreshDto);
   }
 
   @Post('logout')
   async logout(@Body() logoutDto: RefreshDto) {
     this.logger.log(`Logout attempt with token: ${logoutDto.refreshToken}`);
-    return this.appService.logout(logoutDto.refreshToken);
+    return this.appService.logout(logoutDto);
   }
 
   @Get('health')

@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { TokenProvider } from './providers/token.provider';
-import { LoginDto, RegisterDto } from './dto';
+import { LoginDto, RegisterDto, RefreshDto } from './dto';
 import { PrismaService } from '@libs/prisma';
 import { AuthResponse } from './types/auth.interface';
 import * as bcrypt from 'bcrypt';
@@ -70,10 +70,12 @@ export class AuthService {
     };
   }
 
-  async refresh(refreshToken: string): Promise<AuthResponse> {
+  async refresh(refreshToken: RefreshDto): Promise<AuthResponse> {
     let payload: Awaited<ReturnType<TokenProvider['verifyRefreshToken']>>;
     try {
-      payload = await this.tokenProvider.verifyRefreshToken(refreshToken);
+      payload = await this.tokenProvider.verifyRefreshToken(
+        refreshToken.refreshToken,
+      );
     } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
@@ -87,7 +89,10 @@ export class AuthService {
 
     const matchedRecord = await Promise.all(
       tokenRecords.map(async (record: (typeof tokenRecords)[number]) => {
-        const match = await bcrypt.compare(refreshToken, record.token);
+        const match = await bcrypt.compare(
+          refreshToken.refreshToken,
+          record.token,
+        );
         return match ? record : null;
       }),
     ).then((results) => results.find(Boolean));
@@ -118,9 +123,11 @@ export class AuthService {
     return { ...tokens, user };
   }
 
-  async logout(refreshToken: string): Promise<void> {
+  async logout(refreshToken: RefreshDto): Promise<void> {
     try {
-      const payload = await this.tokenProvider.verifyRefreshToken(refreshToken);
+      const payload = await this.tokenProvider.verifyRefreshToken(
+        refreshToken.refreshToken,
+      );
       await this.tokenProvider.invalidateRefreshToken(payload.family);
       this.logger.log(`User ${payload.sub} logged out`);
     } catch {
