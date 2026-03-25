@@ -99,17 +99,17 @@ export class AuthService {
 
     if (!matchedRecord) {
       // Token reuse detected — invalidate the entire family
-      await this.tokenProvider.invalidateRefreshToken(payload.family);
+      await this.tokenProvider.revokeTokenFamily(payload.family);
       this.logger.warn(`Token reuse detected for family ${payload.family}`);
       throw new UnauthorizedException('Token reuse detected');
     }
 
     if (matchedRecord.expiresAt < new Date()) {
-      await this.tokenProvider.invalidateRefreshToken(payload.family);
+      await this.tokenProvider.revokeTokenFamily(payload.family);
       throw new UnauthorizedException('Refresh token expired');
     }
 
-    await this.tokenProvider.invalidateRefreshToken(payload.family);
+    await this.tokenProvider.revokeTokenFamily(payload.family);
 
     const user = await this.prismaService.user.findUnique({
       where: { id: payload.sub },
@@ -128,7 +128,7 @@ export class AuthService {
       const payload = await this.tokenProvider.verifyRefreshToken(
         refreshToken.refreshToken,
       );
-      await this.tokenProvider.invalidateRefreshToken(payload.family);
+      await this.tokenProvider.revokeTokenFamily(payload.family);
       this.logger.log(`User ${payload.sub} logged out`);
     } catch {
       // If token is invalid, nothing to invalidate

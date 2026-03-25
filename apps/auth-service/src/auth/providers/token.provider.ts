@@ -83,7 +83,7 @@ export class TokenProvider {
     }
   }
 
-  private async revokeTokenFamily(family: string): Promise<void> {
+  async revokeTokenFamily(family: string): Promise<void> {
     await this.prismaService.refreshToken.updateMany({
       where: { family },
       data: { revokedAt: new Date() },
