@@ -142,6 +142,20 @@ export class AuthService {
     }
   }
 
+  async logoutAll(userId: string): Promise<void> {
+    await this.prismaService.refreshToken.updateMany({
+      where: {
+        userId,
+        revokedAt: null,
+      },
+      data: {
+        revokedAt: new Date(),
+      },
+    });
+
+    this.logger.log(`User ${userId} logged out from all devices`);
+  }
+
   async findById(id: string) {
     return this.prismaService.user.findUnique({
       where: { id },

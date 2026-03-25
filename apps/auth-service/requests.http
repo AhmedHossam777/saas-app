@@ -1,4 +1,5 @@
 @baseUrl = http://localhost:3001
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NzAzODAwMi1lYWQ5LTQ4ZmUtOWRjMi1mYjYxNDIwOGRmMTAiLCJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJ0ZW5hbnRJZCI6bnVsbCwicm9sZSI6bnVsbCwiaWF0IjoxNzc0NDY5NjQ1LCJleHAiOjE3NzQ0NzA1NDV9.DeFRNbC3dJLRJnTnW-YlNeo-D18eTvypvPUSdjmKyk0
 
 ### Health Check
 GET {{baseUrl}}/health
@@ -37,3 +38,20 @@ Content-Type: application/json
 {
   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NzAzODAwMi1lYWQ5LTQ4ZmUtOWRjMi1mYjYxNDIwOGRmMTAiLCJmYW1pbHkiOiIxMGJiODdlZC1lZDFlLTQ0NDgtYTRiMC01NzNlMTQzOWMxOGQiLCJpYXQiOjE3NzQ0NjQyMDMsImV4cCI6MTc3NTA2OTAwM30.ta2JjELzma7zui4aNMj9O7VGAS3KQ7aEISzZmL_WEfc"
 }
+
+### Logout All
+POST {{baseUrl}}/logout-all
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "userId": "77038002-ead9-48fe-9dc2-fb614208df10"
+}
+
+### Profile
+GET {{baseUrl}}/profile
+Authorization: Bearer {{accessToken}}
+
+### Me
+GET {{baseUrl}}/me
+Authorization: Bearer {{accessToken}}
