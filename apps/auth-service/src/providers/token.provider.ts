@@ -72,9 +72,11 @@ export class TokenProvider {
 
   async verifyRefreshToken(token: string): Promise<RefreshTokenPayload> {
     try {
-      return await this.jwtService.verifyAsync(token, {
+      const payload = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
       });
+
+      return payload;
     } catch (error: any) {
       this.logger.warn(`Refresh token verification failed: ${error.message}`);
       throw error;

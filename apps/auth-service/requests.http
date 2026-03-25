@@ -1,0 +1,39 @@
+@baseUrl = http://localhost:3001
+
+### Health Check
+GET {{baseUrl}}/health
+
+### Register
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+
+### Login
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+
+### Refresh Token
+POST {{baseUrl}}/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NzAzODAwMi1lYWQ5LTQ4ZmUtOWRjMi1mYjYxNDIwOGRmMTAiLCJmYW1pbHkiOiJiMmE5MjdkNS00YjQ2LTRjNmUtYmI1MS1kM2JjNmQ4YjYxY2EiLCJpYXQiOjE3NzQ0NjQzMTQsImV4cCI6MTc3NTA2OTExNH0.W0zZshHAZdcIWoNmHBFfkMy3zz5nFWFG0Eq3pMoH6ck"
+}
+
+### Logout
+POST {{baseUrl}}/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NzAzODAwMi1lYWQ5LTQ4ZmUtOWRjMi1mYjYxNDIwOGRmMTAiLCJmYW1pbHkiOiIxMGJiODdlZC1lZDFlLTQ0NDgtYTRiMC01NzNlMTQzOWMxOGQiLCJpYXQiOjE3NzQ0NjQyMDMsImV4cCI6MTc3NTA2OTAwM30.ta2JjELzma7zui4aNMj9O7VGAS3KQ7aEISzZmL_WEfc"
+}
