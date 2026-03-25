@@ -1,21 +1,18 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ConditionalModule, ConfigModule } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from '@libs/prisma';
-import { TokenProvider } from './providers/token.provider';
-import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['.env'],
     }),
+
     PrismaModule,
-    JwtModule.register({}),
-    ConditionalModule,
+
+    AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, TokenProvider],
 })
 export class AppModule {}

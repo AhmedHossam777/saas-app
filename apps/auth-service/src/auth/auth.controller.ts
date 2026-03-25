@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
-import { AppService } from './app.service';
+import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto';
 import { RefreshDto } from './dto/refresh.dto';
 
 @Controller()
-export class AppController {
-  private readonly logger = new Logger(AppController.name);
-  constructor(private readonly appService: AppService) {}
+export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
+  constructor(private readonly appService: AuthService) {}
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {

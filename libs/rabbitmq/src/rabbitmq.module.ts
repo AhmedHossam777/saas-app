@@ -1,9 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import {
-  ClientsModule,
-  Transport,
-  RmqOptions,
-} from '@nestjs/microservices';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { RabbitmqService } from './rabbitmq.service';
 
 export interface RabbitmqModuleOptions {
@@ -26,7 +22,7 @@ export class RabbitmqModule {
               urls: [options.url ?? 'amqp://saas:saas_secret@rabbitmq:5672'],
               queue: options.queue,
               queueOptions: { durable: true },
-              noAck : true,
+              noAck: true,
             },
           },
         ]),
@@ -36,8 +32,7 @@ export class RabbitmqModule {
     };
   }
 
-
-  static registerAsync (options: RabbitmqModuleOptions): DynamicModule{
-    return this.register(options)
+  static registerAsync(options: RabbitmqModuleOptions): DynamicModule {
+    return this.register(options);
   }
 }

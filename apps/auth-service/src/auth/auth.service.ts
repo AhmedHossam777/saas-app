@@ -11,8 +11,8 @@ import { AuthResponse } from './types/auth.interface';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class AppService {
-  private readonly logger = new Logger(AppService.name);
+export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   constructor(
     private readonly tokenProvider: TokenProvider,
     private readonly prismaService: PrismaService,
