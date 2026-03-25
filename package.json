@@ -12,5 +12,9 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "dependencies": {
+    "@prisma/client": "^6.0.0",
+    "prisma": "^6.0.0"
+  }
 }

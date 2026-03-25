@@ -9,6 +9,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -31,7 +32,7 @@ model RefreshToken {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   expiresAt DateTime @map("expires_at")
-  revikedAt DateTime? @map("revoked_at")
+  revokedAt DateTime? @map("revoked_at")
 
   @@index([userId])
   @@index([family])
