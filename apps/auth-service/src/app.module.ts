@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from '@libs/prisma';
+import { TokenProvider } from './providers/token.provider';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { PrismaModule } from '@libs/prisma';
     PrismaModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, TokenProvider],
 })
-export class AppModule { }
+export class AppModule {}
