@@ -59,6 +59,54 @@ export class TokenProvider {
     return { accessToken, refreshToken };
   }
 
+  async generateTokensWithFamily(
+    userId: string,
+    email: string,
+    family: string,
+  ): Promise<AuthTokens> {
+    const accessTokenPayload: JwtPayload = {
+      sub: userId,
+      email,
+      tenantId: null,
+      role: null,
+    };
+
+    const refreshTokenPayload: RefreshTokenPayload = { sub: userId, family };
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(accessTokenPayload, {
+        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+        expiresIn: this.configService.get<StringValue>(
+          'JWT_ACCESS_EXPIRY',
+          '15m',
+        ),
+      }),
+      this.jwtService.signAsync(refreshTokenPayload, {
+        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+        expiresIn: this.configService.get<StringValue>(
+          'JWT_REFRESH_EXPIRY',
+          '7d',
+        ),
+      }),
+    ]);
+    this.logger.log(
+      `Generated tokens for user ${email} (ID: ${userId}) with family ${family}`,
+    );
+
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 12);
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    await this.prismaService.refreshToken.create({
+      data: {
+        token: hashedRefreshToken,
+        family,
+        userId,
+        expiresAt,
+      },
+    });
+    return { accessToken, refreshToken };
+  }
+
   async verifyAccessToken(token: string): Promise<JwtPayload> {
     try {
       return await this.jwtService.verifyAsync(token, {

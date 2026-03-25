@@ -109,7 +109,10 @@ export class AuthService {
       throw new UnauthorizedException('Refresh token expired');
     }
 
-    await this.tokenProvider.revokeTokenFamily(payload.family);
+    await this.prismaService.refreshToken.update({
+      where: { id: matchedRecord.id },
+      data: { revokedAt: new Date() },
+    });
 
     const user = await this.prismaService.user.findUnique({
       where: { id: payload.sub },
@@ -119,7 +122,11 @@ export class AuthService {
       throw new UnauthorizedException('User not found');
     }
 
-    const tokens = await this.tokenProvider.generateTokens(user.id, user.email);
+    const tokens = await this.tokenProvider.generateTokensWithFamily(
+      user.id,
+      user.email,
+      payload.family,
+    );
     return { ...tokens, user };
   }
 
