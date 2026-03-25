@@ -83,6 +83,13 @@ export class TokenProvider {
     }
   }
 
+  private async revokeTokenFamily(family: string): Promise<void> {
+    await this.prismaService.refreshToken.updateMany({
+      where: { family },
+      data: { revokedAt: new Date() },
+    });
+  }
+
   async invalidateRefreshToken(family: string): Promise<void> {
     await this.prismaService.refreshToken.deleteMany({ where: { family } });
     this.logger.log(`Invalidated refresh tokens with family ${family}`);
