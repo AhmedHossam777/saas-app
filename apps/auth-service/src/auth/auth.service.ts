@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   Logger,
   UnauthorizedException,
@@ -9,6 +10,8 @@ import { LoginDto, RegisterDto, RefreshDto } from './dto';
 import { PrismaService } from '@libs/prisma';
 import { AuthResponse } from './types/auth.interface';
 import * as bcrypt from 'bcrypt';
+import { ClientProxy } from '@nestjs/microservices';
+import { RabbitMQEvents, UserRegisteredEvent } from '@libs/common';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +19,7 @@ export class AuthService {
   constructor(
     private readonly tokenProvider: TokenProvider,
     private readonly prismaService: PrismaService,
+    @Inject('RABBITMQ_CLIENT') private readonly rmqClient: ClientProxy,
   ) {}
 
   async register(registerDto: RegisterDto): Promise<AuthResponse> {
@@ -38,6 +42,18 @@ export class AuthService {
     });
 
     this.logger.log(`User registered: ${user.email} (ID: ${user.id})`);
+    const event: UserRegisteredEvent = {
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+      timestamp: new Date().toISOString(),
+    };
+
+    this.rmqClient.emit(RabbitMQEvents.USER_REGISTERED, event);
+    this.logger.log(
+      `Emitted event: ${RabbitMQEvents.USER_REGISTERED} for user ${user.email}`,
+    );
+
     const tokens = await this.tokenProvider.generateTokens(user.id, user.email);
     return {
       ...tokens,
