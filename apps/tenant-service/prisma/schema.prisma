@@ -9,4 +9,70 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
+
+enum TenantType {
+  PERSONAL   
+  ORGANIZATION 
+}
+
+enum MemberRole {
+  OWNER   
+  ADMIN   
+  MEMBER 
+}
+
+model Tenant {
+  id          String       @id @default(uuid())
+  name        String
+  type        TenantType   @default(ORGANIZATION)
+  slug        String       @unique
+
+  avatarUrl   String?      @map("avatar_url")
+
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  memberships Membership[]
+  invitations  Invitation[]
+
+  @@index([slug])
+  @@map("tenants")
+}
+
+model Membership {
+  id        String   @id @default(uuid())
+  tenantId  String
+  userId    String
+  role      MemberRole @default(MEMBER)
+  joinedAt  DateTime   @default(now()) @map("joined_at")
+
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tenantId])
+  @@index([tenantId])
+  @@index([userId])
+  @@map("memberships")
+}
+
+
+model Invitation {
+  id         String   @id @default(uuid())
+  tenantId   String   @map("tenant_id")
+  email      String
+  role       MemberRole @default(MEMBER)
+  token      String   @unique @default(uuid())
+  invitedBy  String   @map("invited_by")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  expiresAt  DateTime @map("expires_at")
+  acceptedAt DateTime? @map("accepted_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([token])
+  @@map("invitations")
+}
+
